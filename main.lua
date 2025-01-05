@@ -5,6 +5,11 @@ function love.load()
     player.y = 400
     player.speed = 10
 
+    -- sprites
+    --background = {}
+    player.sprite = love.graphics.newImage('sprites/ashPlayer.png')
+    background = love.graphics.newImage('sprites/grassyBG.png')
+    w, l = 100, 100
 end
 
 function love.update(dt)
@@ -32,5 +37,7 @@ function love.update(dt)
 end
 
 function love.draw()
-    love.graphics.circle("fill", player.x, player.y, 10)
+    love.graphics.draw(background, 0, 0) --drawn first (back layer)
+    love.graphics.draw(player.sprite, player.x, player.y)
+    
 end
