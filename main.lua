@@ -1,5 +1,8 @@
 function love.load()
     -- import
+    camera = require 'libraries/camera'
+    cam = camera()
+    
     anim8 = require 'libraries/anim8'
     
     sti = require 'libraries/sti'
@@ -38,9 +41,10 @@ function love.load()
     player.animations.left = anim8.newAnimation(player.grid("1-4", 2), gs)
     player.animations.right = anim8.newAnimation(player.grid("1-4", 3), gs) -- idle 6
     ---------------------------------------------------------------------
-    
+
     player.anim = player.animations.left
 
+    
 
 
 
@@ -99,7 +103,8 @@ function love.update(dt)
 
 
     player.anim:update(dt) -- update
-
+    
+    cam:lookAt(player.x, player.y) --follow player
 
 end
 
@@ -109,13 +114,13 @@ function love.draw()
     local xP, yP = 4, 4
     love.graphics.setColor(1, 1, 1) -- set default
 
-    --woodsBG (-70, -35, 13, 10)
-    gameMap:draw(-70, -35, 13, 10)
-    --love.graphics.draw(background, 0, 0, 0, xBG, yBG) --drawn first (back layer)
+    cam:attach()
+        --woodsBG (-70, -35, 13, 10)
+        gameMap:drawLayer(gameMap.layers["ground"],  0, 0, 0, 2)
+        --love.graphics.draw(background, 0, 0, 0, xBG, yBG) --drawn first (back layer)
 
-    --love.graphics.draw(player.sprite, player.x, player.y, 0, xP, yP)
-    player.anim:draw(player.spriteSheet, player.x, player.y, 0, xP, yP)
-    
+        player.anim:draw(player.spriteSheet, player.x, player.y, 0, xP, yP)
+    cam:detach()
     --text--
     love.graphics.setFont(love.graphics.newFont(20)) -- Sets the default font with size 14
     love.graphics.setColor(0, 0, 0) --text color
