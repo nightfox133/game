@@ -1,2 +1,10 @@
-shift mod
--- to sprint and second action
+-------add--------
+animation
+screen barreirs
+
+
+
+
+
+-------adust-------
+shift mod -- make run less loops later

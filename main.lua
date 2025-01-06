@@ -68,5 +68,3 @@ function love.draw()
     love.graphics.setColor(0, 0, 0) --text color
     love.graphics.print("Player: (" .. player.x .. ", " .. player.y .. ")", 0, 0) -- player location
 end
-
-
