@@ -2,13 +2,16 @@ function love.load()
     anim8 = require 'libraries/anim8'
     
     player = {} -- init 
-    -- atrr
-    player.x = 150
-    player.y = 450
-    player.speed = 10
+    -------atrr-------
+        player.x = 150
+        player.y = 450
 
-    -- sprites
-    -- background = {}
+        --speed--
+        player.walkSpeed = 5 --default (5)
+        player.sprintSpeed = player.walkSpeed * 1.8 -- (1.8)
+        player.speed = player.walkSpeed -- set
+
+    --sprites--
     player.sprite = love.graphics.newImage('sprites/ashPlayer.png')
     --player.spriteSheet = love.graphics.newImage('sprites/playerSheet.png')
 
@@ -41,16 +44,29 @@ function love.update(dt)
     if love.keyboard.isDown("down") then
         player.y = player.y + player.speed
     end
+
+    -- shift key
+    if love.keyboard.isDown("lshift") then
+        player.speed = player.sprintSpeed
+    else
+        player.speed = player.walkSpeed
+    end
 end
 
 
 function love.draw()
     local xBG, yBG = 3, 3
     local xP, yP = .1, .1
-    love.graphics.draw(background, 0, 0, 0, xBG, yBG) --drawn first (back layer)
-    love.graphics.draw(player.sprite, player.x, player.y, 0, xP, yP)
+    love.graphics.setColor(1, 1, 1) -- set default
 
-    love.graphics.print("Player: (" .. player.x .. ", " .. player.y .. ")", 100, 100)
+    love.graphics.draw(background, 0, 0, 0, xBG, yBG) --drawn first (back layer)
+
+    love.graphics.draw(player.sprite, player.x, player.y, 0, xP, yP)
+    love.graphics.setFont(love.graphics.newFont(20)) -- Sets the default font with size 14
+    
+    --text--
+    love.graphics.setColor(0, 0, 0) --text color
+    love.graphics.print("Player: (" .. player.x .. ", " .. player.y .. ")", 0, 0) -- player location
 end
 
 
