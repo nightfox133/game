@@ -26,7 +26,7 @@ function love.load()
     -- red hood is (19, 21)
     player.grid = anim8.newGrid(19, 21, player.spriteSheet:getWidth(), player.spriteSheet:getHeight()) --geuss and check
 
-    player.animations = {}                                --number row time
+    player.animations = {}                             --number row time
     player.animations.up = anim8.newAnimation(player.grid("1-4", 1), gs) -- (.2 || .1)
     player.animations.down = anim8.newAnimation(player.grid("1-3", 2), gs)
     player.animations.left = anim8.newAnimation(player.grid("1-4", 4), gs)
@@ -44,30 +44,37 @@ function love.load()
 end
 
 function love.update(dt)
+    local isMoving = false
+    
+    
     -- CONTROLS --
 
     -- right arrow key
     if love.keyboard.isDown("right") then
         player.x = player.x + player.speed
         player.anim = player.animations.right
+        isMoving = true
     end
 
     -- left arrow key
     if love.keyboard.isDown("left") then
         player.x = player.x - player.speed
         player.anim = player.animations.left
+        isMoving = true
     end
 
     -- up arrow key
     if love.keyboard.isDown("up") then
         player.y = player.y - player.speed
         player.anim = player.animations.up
+        isMoving = true
     end
 
     -- down arrow key
     if love.keyboard.isDown("down") then
         player.y = player.y + player.speed
         player.anim = player.animations.down
+        isMoving = true
     end
 
     -- shift key
@@ -79,7 +86,12 @@ function love.update(dt)
 
     -----update-------
 
-    player.anim:update(dt)
+    if isMoving == false then
+        player.anim:gotoFrame(2) --goes to standing still frame
+    end
+
+
+    player.anim:update(dt) -- update
 
 
 end
