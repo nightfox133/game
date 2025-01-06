@@ -2,8 +2,14 @@ function love.load()
     -- import
     anim8 = require 'libraries/anim8'
     
+    sti = require 'libraries/sti'
+    gameMap = sti('maps/test.lua')
+    
     --un blurry
     love.graphics.setDefaultFilter("nearest", "nearest")
+
+
+
 
     gs = .1 -- frame length
 
@@ -99,16 +105,18 @@ end
 
 function love.draw()
     local xBG, yBG = 3, 3
-    local xP, yP = 10, 10
+    local xP, yP = 8, 8
     love.graphics.setColor(1, 1, 1) -- set default
 
-    love.graphics.draw(background, 0, 0, 0, xBG, yBG) --drawn first (back layer)
+    --woodsBG (-70, )
+    gameMap:draw(-70, -35, 13, 10)
+    --love.graphics.draw(background, 0, 0, 0, xBG, yBG) --drawn first (back layer)
 
     --love.graphics.draw(player.sprite, player.x, player.y, 0, xP, yP)
     player.anim:draw(player.spriteSheet, player.x, player.y, 0, xP, yP)
-    love.graphics.setFont(love.graphics.newFont(20)) -- Sets the default font with size 14
     
     --text--
+    love.graphics.setFont(love.graphics.newFont(20)) -- Sets the default font with size 14
     love.graphics.setColor(0, 0, 0) --text color
     love.graphics.print("Player: (" .. player.x .. ", " .. player.y .. ")", 0, 0) -- player location
 end
