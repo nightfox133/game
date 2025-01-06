@@ -1,15 +1,22 @@
 function love.load()
+    anim8 = require 'libraries/anim8'
+    
     player = {} -- init 
     -- atrr
-    player.x = 100
-    player.y = 100
+    player.x = 150
+    player.y = 450
     player.speed = 10
 
     -- sprites
-    --background = {}
+    -- background = {}
     player.sprite = love.graphics.newImage('sprites/ashPlayer.png')
+    --player.spriteSheet = love.graphics.newImage('sprites/playerSheet.png')
+
     background = love.graphics.newImage('sprites/grassyBG.png')
-    w, l = 100, 100
+
+
+    --player.grid = anim8.newGrid(12, 18, player.spriteSheet:getWidth(), player.spriteSheet:getHeight()) --geuss and check
+
 end
 
 function love.update(dt)
@@ -36,10 +43,14 @@ function love.update(dt)
     end
 end
 
+
 function love.draw()
     local xBG, yBG = 3, 3
     local xP, yP = .1, .1
     love.graphics.draw(background, 0, 0, 0, xBG, yBG) --drawn first (back layer)
     love.graphics.draw(player.sprite, player.x, player.y, 0, xP, yP)
-    
+
+    love.graphics.print("Player: (" .. player.x .. ", " .. player.y .. ")", 100, 100)
 end
+
+

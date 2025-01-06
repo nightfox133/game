@@ -1,6 +1,6 @@
 main player: 
     race: ghost
-    name: idk
+    name: {harold, chester, earl, lyney, charlie} idk
 
 objective:
     red balloon
