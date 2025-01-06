@@ -5,6 +5,8 @@ function love.load()
     --un blurry
     love.graphics.setDefaultFilter("nearest", "nearest")
 
+    gs = .1 -- frame length
+
     player = {} -- init 
     -------atrr-------
         player.x = 150
@@ -21,14 +23,16 @@ function love.load()
 
     background = love.graphics.newImage('sprites/grassyBG.png')
 
-    -- red hood is (19, 19)
-    player.grid = anim8.newGrid(19, 19, player.spriteSheet:getWidth(), player.spriteSheet:getHeight()) --geuss and check
+    -- red hood is (19, 21)
+    player.grid = anim8.newGrid(19, 21, player.spriteSheet:getWidth(), player.spriteSheet:getHeight()) --geuss and check
 
     player.animations = {}                                --number row time
-    player.animations.down = anim8.newAnimation(player.grid("1-4", 1), 0.2)
-    player.animations.left = anim8.newAnimation(player.grid("1-4", 1), 0.2)
+    player.animations.up = anim8.newAnimation(player.grid("1-4", 1), gs) -- (.2 || .1)
+    player.animations.down = anim8.newAnimation(player.grid("1-3", 2), gs)
+    player.animations.left = anim8.newAnimation(player.grid("1-4", 4), gs)
+    player.animations.right = anim8.newAnimation(player.grid("1-3", 6), gs) -- idle 6
 
-
+    player.anim = player.animations.left
 
 
 
@@ -45,21 +49,25 @@ function love.update(dt)
     -- right arrow key
     if love.keyboard.isDown("right") then
         player.x = player.x + player.speed
+        player.anim = player.animations.right
     end
 
     -- left arrow key
     if love.keyboard.isDown("left") then
         player.x = player.x - player.speed
+        player.anim = player.animations.left
     end
 
     -- up arrow key
     if love.keyboard.isDown("up") then
         player.y = player.y - player.speed
+        player.anim = player.animations.up
     end
 
     -- down arrow key
     if love.keyboard.isDown("down") then
         player.y = player.y + player.speed
+        player.anim = player.animations.down
     end
 
     -- shift key
@@ -71,7 +79,7 @@ function love.update(dt)
 
     -----update-------
 
-    player.animations.down:update(dt)
+    player.anim:update(dt)
 
 
 end
@@ -85,7 +93,7 @@ function love.draw()
     love.graphics.draw(background, 0, 0, 0, xBG, yBG) --drawn first (back layer)
 
     --love.graphics.draw(player.sprite, player.x, player.y, 0, xP, yP)
-    player.animations.down:draw(player.spriteSheet, player.x, player.y, 0, xP, yP)
+    player.anim:draw(player.spriteSheet, player.x, player.y, 0, xP, yP)
     love.graphics.setFont(love.graphics.newFont(20)) -- Sets the default font with size 14
     
     --text--

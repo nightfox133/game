@@ -1,5 +1,8 @@
 -------add--------
-animation
+animations
+
+
+
 screen barreirs
 
 
@@ -8,3 +11,4 @@ screen barreirs
 
 -------adust-------
 shift mod -- make run less loops later
+make a animation handeler that takes a string input to set anim to the right direction
