@@ -108,7 +108,7 @@ function love.draw()
     local xP, yP = 8, 8
     love.graphics.setColor(1, 1, 1) -- set default
 
-    --woodsBG (-70, )
+    --woodsBG (-70, -35, 13, 10)
     gameMap:draw(-70, -35, 13, 10)
     --love.graphics.draw(background, 0, 0, 0, xBG, yBG) --drawn first (back layer)
 
