@@ -1,6 +1,10 @@
 function love.load()
+    -- import
     anim8 = require 'libraries/anim8'
     
+    --un blurry
+    love.graphics.setDefaultFilter("nearest", "nearest")
+
     player = {} -- init 
     -------atrr-------
         player.x = 150
@@ -13,12 +17,25 @@ function love.load()
 
     --sprites--
     player.sprite = love.graphics.newImage('sprites/ashPlayer.png')
-    --player.spriteSheet = love.graphics.newImage('sprites/playerSheet.png')
+    player.spriteSheet = love.graphics.newImage('sprites/playerSheet.png')
 
     background = love.graphics.newImage('sprites/grassyBG.png')
 
+    -- red hood is (19, 19)
+    player.grid = anim8.newGrid(19, 19, player.spriteSheet:getWidth(), player.spriteSheet:getHeight()) --geuss and check
 
-    --player.grid = anim8.newGrid(12, 18, player.spriteSheet:getWidth(), player.spriteSheet:getHeight()) --geuss and check
+    player.animations = {}                                --number row time
+    player.animations.down = anim8.newAnimation(player.grid("1-4", 1), 0.2)
+    player.animations.left = anim8.newAnimation(player.grid("1-4", 1), 0.2)
+
+
+
+
+
+
+
+
+
 
 end
 
@@ -51,17 +68,24 @@ function love.update(dt)
     else
         player.speed = player.walkSpeed
     end
+
+    -----update-------
+
+    player.animations.down:update(dt)
+
+
 end
 
 
 function love.draw()
     local xBG, yBG = 3, 3
-    local xP, yP = .1, .1
+    local xP, yP = 10, 10
     love.graphics.setColor(1, 1, 1) -- set default
 
     love.graphics.draw(background, 0, 0, 0, xBG, yBG) --drawn first (back layer)
 
-    love.graphics.draw(player.sprite, player.x, player.y, 0, xP, yP)
+    --love.graphics.draw(player.sprite, player.x, player.y, 0, xP, yP)
+    player.animations.down:draw(player.spriteSheet, player.x, player.y, 0, xP, yP)
     love.graphics.setFont(love.graphics.newFont(20)) -- Sets the default font with size 14
     
     --text--
