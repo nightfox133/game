@@ -1,8 +1,8 @@
 function love.load()
     player = {} -- init 
     -- atrr
-    player.x = 400
-    player.y = 400
+    player.x = 100
+    player.y = 100
     player.speed = 10
 
     -- sprites
@@ -37,7 +37,9 @@ function love.update(dt)
 end
 
 function love.draw()
-    love.graphics.draw(background, 0, 0) --drawn first (back layer)
-    love.graphics.draw(player.sprite, player.x, player.y)
+    local xBG, yBG = 3, 3
+    local xP, yP = .1, .1
+    love.graphics.draw(background, 0, 0, 0, xBG, yBG) --drawn first (back layer)
+    love.graphics.draw(player.sprite, player.x, player.y, 0, xP, yP)
     
 end
