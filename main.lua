@@ -11,7 +11,7 @@ function love.load()
 
 
 
-    gs = .1 -- frame length
+    gs = .2 -- frame length ().2)
 
     player = {} -- init 
     -------atrr-------
@@ -24,20 +24,21 @@ function love.load()
         player.speed = player.walkSpeed -- set
 
     --sprites--
-    player.sprite = love.graphics.newImage('sprites/ashPlayer.png')
-    player.spriteSheet = love.graphics.newImage('sprites/playerSheet.png')
+    player.spriteSheet = love.graphics.newImage('sprites/simplePlayerSheet.png')
 
     background = love.graphics.newImage('sprites/grassyBG.png')
 
     -- red hood is (19, 21)
-    player.grid = anim8.newGrid(19, 21, player.spriteSheet:getWidth(), player.spriteSheet:getHeight()) --geuss and check
+    player.grid = anim8.newGrid(64, 63, player.spriteSheet:getWidth(), player.spriteSheet:getHeight(), 0 , 10) --geuss and check
 
-    player.animations = {}                             --number row time
-    player.animations.up = anim8.newAnimation(player.grid("1-4", 1), gs) -- (.2 || .1)
-    player.animations.down = anim8.newAnimation(player.grid("1-3", 2), gs)
-    player.animations.left = anim8.newAnimation(player.grid("1-4", 4), gs)
-    player.animations.right = anim8.newAnimation(player.grid("1-3", 6), gs) -- idle 6
-
+    player.animations = {} 
+    -- default animations                              --number row time
+    player.animations.up = anim8.newAnimation(player.grid("1-4", 4), gs) -- (.2 || .1)
+    player.animations.down = anim8.newAnimation(player.grid("1-4", 1), gs)
+    player.animations.left = anim8.newAnimation(player.grid("1-4", 2), gs)
+    player.animations.right = anim8.newAnimation(player.grid("1-4", 3), gs) -- idle 6
+    ---------------------------------------------------------------------
+    
     player.anim = player.animations.left
 
 
@@ -105,7 +106,7 @@ end
 
 function love.draw()
     local xBG, yBG = 3, 3
-    local xP, yP = 8, 8
+    local xP, yP = 4, 4
     love.graphics.setColor(1, 1, 1) -- set default
 
     --woodsBG (-70, -35, 13, 10)
