@@ -1,0 +1,12 @@
+main player: 
+    race: ghost
+    name: idk
+
+objective:
+    red balloon
+
+world:
+    greyscale 
+        # exept key items
+
+    8 directional conrols
