@@ -245,8 +245,8 @@ function Map:setTiles(index, tileset, gid)
 				time        = 0,
 				width       = tileW,
 				height      = tileH,
-				sx          = 1,
-				sy          = 1,
+				sx          = 10,
+				sy          = 10,
 				r           = 0,
 				offset      = tileset.tileoffset,
 			}
