@@ -6,7 +6,7 @@ function love.load()
     anim8 = require 'libraries/anim8'
     
     sti = require 'libraries/sti'
-    gameMap = sti('maps/test.lua')
+    gameMap = sti('maps/36x36 test.lua')
     
     --un blurry
     love.graphics.setDefaultFilter("nearest", "nearest")
@@ -18,7 +18,7 @@ function love.load()
 
     player = {} -- init 
     -------atrr-------
-        player.x = 150
+        player.x = 1000
         player.y = 450
 
         --speed--
@@ -29,7 +29,7 @@ function love.load()
     --sprites--
     player.spriteSheet = love.graphics.newImage('sprites/simplePlayerSheet.png')
 
-    background = love.graphics.newImage('sprites/grassyBG.png')
+    background = love.graphics.newImage('town.jpg')
 
     -- red hood is (19, 21)
     player.grid = anim8.newGrid(64, 63, player.spriteSheet:getWidth(), player.spriteSheet:getHeight(), 0 , 10) --geuss and check
@@ -110,14 +110,14 @@ end
 
 
 function love.draw()
-    local xBG, yBG = 3, 3
+    local xBG, yBG = 3
     local xP, yP = 1, 1
     love.graphics.setColor(1, 1, 1) -- set default
 
     cam:attach()
         --woodsBG (-70, -35, 13, 10)
-        gameMap:drawLayer(gameMap.layers["ground"],  0, 0, 0, 2)
-        --love.graphics.draw(background, 0, 0, 0, xBG, yBG) --drawn first (back layer)
+        --gameMap:drawLayer(gameMap.layers["ground"])
+        love.graphics.draw(background, 0, 0, 0, xBG, yBG) --drawn first (back layer)
 
         player.anim:draw(player.spriteSheet, player.x, player.y, 0, xP, yP)
     cam:detach()

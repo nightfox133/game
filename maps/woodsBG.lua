@@ -14,7 +14,7 @@ return {
   properties = {},
   tilesets = {
     {
-      name = "test tiles",
+      name = "ground",
       firstgid = 1,
       class = "",
       tilewidth = 8,
