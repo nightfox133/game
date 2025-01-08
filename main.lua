@@ -111,7 +111,7 @@ end
 
 function love.draw()
     local xBG, yBG = 3, 3
-    local xP, yP = 4, 4
+    local xP, yP = 1, 1
     love.graphics.setColor(1, 1, 1) -- set default
 
     cam:attach()
