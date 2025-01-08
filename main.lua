@@ -98,7 +98,7 @@ function love.update(dt)
     -----update-------
 
     if isMoving == false then
-        player.anim:gotoFrame(2) --goes to standing still frame
+        player.anim:gotoFrame(1) --goes to standing still frame
     end
 
 
