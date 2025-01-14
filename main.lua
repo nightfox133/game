@@ -1,12 +1,17 @@
 function love.load()
     -- import
+
+    wf = require "libraries/windfield"
+    world = wf.newWorld(0, 0)
+
+
     camera = require 'libraries/camera'
     cam = camera()
     
     anim8 = require 'libraries/anim8'
     
     sti = require 'libraries/sti'
-    --gameMap = sti('maps/36x36 test.lua')
+    gameMap = sti('maps/36x36.lua')
     
     --un blurry
     love.graphics.setDefaultFilter("nearest", "nearest")
@@ -20,9 +25,9 @@ function love.load()
     -------atrr-------
         player.x = 1000
         player.y = 450
-
+        
         --speed--
-        player.walkSpeed = 5 --default (5)
+        player.walkSpeed = 200 --default (200)
         player.sprintSpeed = player.walkSpeed * 1.8 -- (1.8)
         player.speed = player.walkSpeed -- set
 
@@ -44,10 +49,17 @@ function love.load()
 
     player.anim = player.animations.left
 
-    
+    player.collider = world:newBSGRectangleCollider(player.x, player.y, 38, 53, 12) --(38,53,12)
+    player.collider:setFixedRotation(true)
 
-
-
+    walls = {}
+    if gameMap.layers["walls"] then 
+        for i, obj in pairs(gameMap.layers["walls"].objects) do
+            local wall = world:newRectangleCollider(obj.x, obj.y, obj.width, obj.height)
+            wall:setType('static')
+            table.insert(walls, wall)
+        end
+    end
 
 
 
@@ -57,33 +69,35 @@ end
 function love.update(dt)
     local isMoving = false
     
-    
     -- CONTROLS --
+
+    local vx = 0
+    local vy = 0
 
     -- right arrow key
     if love.keyboard.isDown("right") then
-        player.x = player.x + player.speed
+        vx = player.speed
         player.anim = player.animations.right
         isMoving = true
     end
 
     -- left arrow key
     if love.keyboard.isDown("left") then
-        player.x = player.x - player.speed
+        vx =  player.speed * -1
         player.anim = player.animations.left
         isMoving = true
     end
 
     -- up arrow key
     if love.keyboard.isDown("up") then
-        player.y = player.y - player.speed
+        vy =  player.speed * -1
         player.anim = player.animations.up
         isMoving = true
     end
 
     -- down arrow key
     if love.keyboard.isDown("down") then
-        player.y = player.y + player.speed
+        vy =  player.speed
         player.anim = player.animations.down
         isMoving = true
     end
@@ -97,6 +111,9 @@ function love.update(dt)
 
     -----update-------
 
+    player.collider:setLinearVelocity(vx, vy)
+
+
     if isMoving == false then
         player.anim:gotoFrame(1) --goes to standing still frame
     end
@@ -104,6 +121,9 @@ function love.update(dt)
 
     player.anim:update(dt) -- update
     
+    world:update(dt)
+    player.x = player.collider:getX() - 32
+    player.y = player.collider:getY() - 30
 
 
     cam.x, cam.y = player.x, player.y
@@ -142,16 +162,23 @@ function love.draw()
     love.graphics.setColor(1, 1, 1) -- set default
 
     cam:attach()
-        --woodsBG (-70, -35, 13, 10)
-        --gameMap:drawLayer(gameMap.layers["ground"])
+        gameMap:drawLayer(gameMap.layers["walls"])
+    
         love.graphics.draw(background, 0, 0, 0, xBG, yBG) --drawn first (back layer)
 
+        
+        --gameMap:drawLayer(gameMap.layers["ground"]) --(major distortion)
+
+
         player.anim:draw(player.spriteSheet, player.x, player.y, 0, xP, yP)
+        world:draw()
     cam:detach()
     --text--
     love.graphics.setFont(love.graphics.newFont(20)) -- Sets the default font with size 14
     love.graphics.setColor(0, 0, 0) --text color
     love.graphics.print("Player: (" .. player.x .. ", " .. player.y .. ")", 0, 0) -- player location
+
+    
 end
 
 function love.keypressed(key)
