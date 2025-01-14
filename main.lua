@@ -29,7 +29,7 @@ function love.load()
     --sprites--
     player.spriteSheet = love.graphics.newImage('sprites/simplePlayerSheet.png')
 
-    background = love.graphics.newImage('town.jpg')
+    background = love.graphics.newImage('weirdTown.png')
 
     -- red hood is (19, 21)
     player.grid = anim8.newGrid(64, 63, player.spriteSheet:getWidth(), player.spriteSheet:getHeight(), 0 , 10) --geuss and check
@@ -104,7 +104,34 @@ function love.update(dt)
 
     player.anim:update(dt) -- update
     
-    cam:lookAt(player.x, player.y) --follow player
+
+
+    cam.x, cam.y = player.x, player.y
+    local mapw = background:getWidth()
+    local maph = background:getHeight()  
+
+    local w = love.graphics.getWidth()
+    local h = love.graphics.getHeight()
+
+    -- left bound
+    if cam.x < w/2 then 
+        cam.x = w/2
+    end
+    -- right bound
+    if cam.x > mapw + w/2 then 
+        cam.x = mapw + w/2
+    end
+    -- up bound
+    if cam.y < h/2 then
+        cam.y = h/2
+    end
+    -- bottom bound
+    if cam.y > maph*2 + h then 
+        cam.y = maph*2 + h
+    end
+
+
+    cam:lookAt(cam.x, cam.y) --follow player
 
 end
 
@@ -125,4 +152,11 @@ function love.draw()
     love.graphics.setFont(love.graphics.newFont(20)) -- Sets the default font with size 14
     love.graphics.setColor(0, 0, 0) --text color
     love.graphics.print("Player: (" .. player.x .. ", " .. player.y .. ")", 0, 0) -- player location
+end
+
+function love.keypressed(key)
+    -- right arrow key
+    if key == "space" then
+        player.x, player.y = 880, 565
+    end
 end
