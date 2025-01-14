@@ -6,7 +6,7 @@ function love.load()
     anim8 = require 'libraries/anim8'
     
     sti = require 'libraries/sti'
-    gameMap = sti('maps/36x36 test.lua')
+    --gameMap = sti('maps/36x36 test.lua')
     
     --un blurry
     love.graphics.setDefaultFilter("nearest", "nearest")
