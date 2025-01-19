@@ -1,6 +1,12 @@
 function love.load()
     -- import
 
+    --init toggle vars--
+    toggle = require "toggle" 
+      gameMusic = toggle:new()
+      test = toggle:new()
+
+
     wf = require "libraries/windfield"
     world = wf.newWorld(0, 0)
 
@@ -61,9 +67,15 @@ function love.load()
         end
     end
 
+    --sounds--
+        -- sound fx: static
+        -- muisic: stream
+    sounds = {}
+    sounds.blip = love.audio.newSource("sounds/blip.mp3", "static")
+    sounds.music = love.audio.newSource("sounds/8bit-music-test.mp3", "stream")
 
-
-
+    sounds.music:play()
+    sounds.music:setLooping(true)
 end
 
 function love.update(dt)
@@ -78,7 +90,7 @@ function love.update(dt)
     if love.keyboard.isDown("right") then
         vx = player.speed
         player.anim = player.animations.right
-        isMoving = true
+        isMoving = true 
     end
 
     -- left arrow key
@@ -103,7 +115,7 @@ function love.update(dt)
     end
 
     -- shift key
-    if love.keyboard.isDown("lshift") then
+    if love.keyboard.isDown("lshift") or love.keyboard.isDown("rshift") then
         player.speed = player.sprintSpeed
     else
         player.speed = player.walkSpeed
@@ -178,12 +190,33 @@ function love.draw()
     love.graphics.setColor(0, 0, 0) --text color
     love.graphics.print("Player: (" .. player.x .. ", " .. player.y .. ")", 0, 0) -- player location
 
-    
+
+
+    if test:get() then
+        love.graphics.print("The toggle is ON", 400, 300)
+    else
+        love.graphics.print("The toggle is OFF", 400, 300)
+    end
 end
 
 function love.keypressed(key)
-    -- right arrow key
+    -- teloport
     if key == "space" then
-        player.x, player.y = 880, 565
+        player.collider:setX(880)
+        player.collider:setY(600)
+    end
+    -- attack
+    if key == "a" then
+        love.graphics.print("attack", 0, 0)
+        sounds.blip:play()
+    end
+    
+    if key == "m" then
+        gameMusic:toggle()
+        if gameMusic:get() then
+            sounds.music:pause()
+        else 
+            sounds.music:play()
+        end
     end
 end
