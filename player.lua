@@ -52,6 +52,12 @@ function Player.update(dt)
         isMoving = true
     end
 
+    if vx ~= 0 and vy ~= 0 then
+        local length = math.sqrt(vx^2 + vy^2)
+        vx = vx / length * Player.speed
+        vy = vy / length * Player.speed
+    end
+
     -- Sprinting
     if love.keyboard.isDown("lshift") or love.keyboard.isDown("rshift") then
         Player.speed = Player.sprintSpeed

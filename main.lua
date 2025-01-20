@@ -3,6 +3,7 @@ local camera = require 'libraries/camera'
 local anim8 = require 'libraries/anim8'
 local sti = require 'libraries/sti'
 local toggle = require "toggle"
+local calc = require 'calc'
 local Player = require 'player'  -- Require the Player module
 
 function love.load()
@@ -100,7 +101,7 @@ function love.draw()
     -- Display player coordinates
     love.graphics.setFont(love.graphics.newFont(20))
     love.graphics.setColor(0, 0, 0) -- Text color
-    love.graphics.print("Player: (" .. Player.x .. ", " .. Player.y .. ")", 0, 0)
+    love.graphics.print("Player: (" .. calc:round(Player.x) .. ", " .. calc:round(Player.y) .. ")", 0, 0)
 
     -- Toggle message
     if gameMusic:get() then
