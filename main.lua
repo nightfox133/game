@@ -133,4 +133,8 @@ function love.keypressed(key)
             sounds.music:play()
         end
     end
+
+    if key == "escape" then
+        love.event.quit()  -- Quit the game
+    end
 end
