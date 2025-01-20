@@ -1,15 +1,18 @@
+-- main.lua
 local wf = require "libraries/windfield"
 local camera = require 'libraries/camera'
 local anim8 = require 'libraries/anim8'
 local sti = require 'libraries/sti'
 local toggle = require "toggle"
 local calc = require 'calc'
+local menu = require 'menu'  -- Require the menu.lua module
 local Player = require 'player'  -- Require the Player module
 
 function love.load()
+    menu.load()
+    
     -- Initialize toggle variables
     gameMusic = toggle:new()
-    test = toggle:new()
 
     -- Setup world and camera
     world = wf.newWorld(0, 0)
@@ -22,11 +25,8 @@ function love.load()
     -- Set graphics filter
     love.graphics.setDefaultFilter("nearest", "nearest")
 
-    -- Frame duration (0.2 seconds per frame)
-    gs = 0.2
-
     -- Load player and initialize
-    Player.load(world)  -- Load the player with the world passed in
+    Player.load(world)
 
     -- Initialize walls from the map
     walls = {}
@@ -47,94 +47,103 @@ function love.load()
 end
 
 function love.update(dt)
-    -- Update the player with the delta time
-    Player.update(dt)
-
-    -- Camera follow player
-    cam.x, cam.y = Player.x, Player.y
-
-    local mapw = background:getWidth()
-    local maph = background:getHeight()
-    local w = love.graphics.getWidth()
-    local h = love.graphics.getHeight()
-
-    -- Camera boundaries
-    if cam.x < w / 2 then
-        cam.x = w / 2
-    end
-    if cam.x > mapw + w / 2 then
-        cam.x = mapw + w / 2
-    end
-    if cam.y < h / 2 then
-        cam.y = h / 2
-    end
-    if cam.y > maph * 2 + h then
-        cam.y = maph * 2 + h
+    if menu.getState() == "menu" then
+        menu.update(dt)  -- Update the menu if in the "menu" state
+    elseif menu.getState() == "game" then
+        Player.update(dt)  -- Update player and game if in the "game" state
     end
 
-    cam:lookAt(cam.x, cam.y)
+    -- Camera follow player if in game state
+    if menu.getState() == "game" then
+        cam.x, cam.y = Player.x, Player.y
 
-    world:update(dt)  -- Update world (for collision detection)
+        local mapw = background:getWidth()
+        local maph = background:getHeight()
+        local w = love.graphics.getWidth()
+        local h = love.graphics.getHeight()
+
+        -- Camera boundaries
+        if cam.x < w / 2 then
+            cam.x = w / 2
+        end
+        if cam.x > mapw + w / 2 then
+            cam.x = mapw + w / 2
+        end
+        if cam.y < h / 2 then
+            cam.y = h / 2
+        end
+        if cam.y > maph * 2 + h then
+            cam.y = maph * 2 + h
+        end
+
+        cam:lookAt(cam.x, cam.y)
+        world:update(dt)  -- Update world (for collision detection)
+    end
 end
 
 function love.draw()
-    local xBG, yBG = 3
-    local xP, yP = 1, 1
-    love.graphics.setColor(1, 1, 1) -- Set default color
+    menu.draw()  -- Draw the menu or the game based on current state
+    
+    if menu.getState() == "game" then
+        -- Game-specific drawing goes here
+        local xBG, yBG = 3
+        love.graphics.setColor(1, 1, 1)  -- Set default color
+        cam:attach()
+        
+        -- Draw the game map and walls
+        gameMap:drawLayer(gameMap.layers["walls"])
 
-    cam:attach()
+        -- Draw background
+        love.graphics.draw(background, 0, 0, 0, xBG, yBG)
 
-    -- Draw the game map and walls
-    gameMap:drawLayer(gameMap.layers["walls"])
+        -- Draw player animation
+        Player.draw()
 
-    -- Draw background
-    love.graphics.draw(background, 0, 0, 0, xBG, yBG)
+        -- Draw world colliders
+        world:draw()
+        cam:detach()
 
-    -- Draw player animation
-    Player.draw()  -- Draw the player using the Player module's draw function
+        -- Display player coordinates
+        love.graphics.setFont(love.graphics.newFont(20))
+        love.graphics.setColor(0, 0, 0)  -- Text color
+        love.graphics.print("Player: (" .. calc:round(Player.x) .. ", " .. calc:round(Player.y) .. ")", 0, 0)
 
-    -- Draw world colliders
-    world:draw()
-
-    cam:detach()
-
-    -- Display player coordinates
-    love.graphics.setFont(love.graphics.newFont(20))
-    love.graphics.setColor(0, 0, 0) -- Text color
-    love.graphics.print("Player: (" .. calc:round(Player.x) .. ", " .. calc:round(Player.y) .. ")", 0, 0)
-
-    -- Toggle message
-    if gameMusic:get() then
-        love.graphics.print("music: OFF  'm' to toggle", 0, 20)
-    else
-        love.graphics.print("music: ON   'm' to toggle", 0, 20)
+        -- Toggle message
+        if gameMusic:get() then
+            love.graphics.print("music: OFF  'm' to toggle", 0, 20)
+        else
+            love.graphics.print("music: ON   'm' to toggle", 0, 20)
+        end
     end
 end
 
 function love.keypressed(key)
-    -- Teleport on space key press
-    if key == "space" then
-        Player.collider:setX(880)
-        Player.collider:setY(600)
-    end
-
-    -- Attack on 'a' key press
-    if key == "a" then
-        love.graphics.print("attack", 0, 0)
-        sounds.blip:play()
-    end
-
-    -- Toggle music on 'm' key press
-    if key == "m" then
-        gameMusic:toggle()
-        if gameMusic:get() then
-            sounds.music:pause()
-        else
-            sounds.music:play()
+    if menu.getState() == "menu" then
+        menu.keypressed(key)  -- Handle key press in the menu
+    elseif menu.getState() == "game" then
+        -- Handle key presses during gameplay
+        if key == "space" then
+            Player.collider:setX(880)
+            Player.collider:setY(600)
         end
-    end
 
-    if key == "escape" then
-        love.event.quit()  -- Quit the game
+        if key == "a" then
+            love.graphics.print("attack", 0, 0)
+            sounds.blip:play()
+        end
+
+        -- Toggle music on 'm' key press
+        if key == "m" then
+            gameMusic:toggle()
+            if gameMusic:get() then
+                sounds.music:pause()
+            else
+                sounds.music:play()
+            end
+        end
+
+        if key == "escape" then
+            love.event.quit()  -- Quit the game
+        end
     end
 end

@@ -6,3 +6,5 @@ fix map res (tiled)
 tp with space
  - make a roll
  
+
+ handeler that has a string ouput describing action of player
